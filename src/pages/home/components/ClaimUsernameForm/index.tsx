@@ -5,6 +5,7 @@ import { ArrowRight } from 'phosphor-react'
 import { ElementType } from 'react'
 import { Form, FormAnnotation, FormProps } from './styles'
 import { z } from 'zod'
+import { useRouter } from 'next/router'
 
 export type IProps = FormProps & {
   as?: ElementType
@@ -20,19 +21,22 @@ const claimUsernameSchema = z.object({
     .transform((username) => username.toLowerCase()),
 })
 
-type IUsernameForm = z.infer<typeof claimUsernameSchema>
+type IClaimForm = z.infer<typeof claimUsernameSchema>
 
 export default function ClaimUsernameForm({ ...props }: IProps) {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<IUsernameForm>({
+    formState: { errors, isSubmitting },
+  } = useForm<IClaimForm>({
     resolver: zodResolver(claimUsernameSchema),
   })
 
-  const handleClaimUsername = async (data: IUsernameForm) => {
-    alert(data.username)
+  const handleClaimUsername = async (data: IClaimForm) => {
+    const { username } = data
+
+    await router.push(`/register?username=${username}`)
   }
 
   return (
@@ -45,7 +49,7 @@ export default function ClaimUsernameForm({ ...props }: IProps) {
           crossOrigin="anonymous"
           {...register('username')}
         />
-        <Button size="sm" type="submit">
+        <Button size="sm" type="submit" disabled={isSubmitting}>
           Reservar
           <ArrowRight />
         </Button>

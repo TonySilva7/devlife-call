@@ -4,30 +4,40 @@ import { ArrowRight } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 type RegisterProps = ContainerProps
 
-export default function Register({ ...props }: RegisterProps) {
-  const registerFormSchema = z.object({
-    username: z
-      .string()
-      .min(3, { message: 'Deve ter no mínimo 3 caracteres' })
-      .regex(/^([a-z\\-]+)$/i, {
-        message: 'O usuário só pode ter letras e hífen',
-      })
-      .transform((username) => username.toLowerCase()),
-    name: z.string().min(3, { message: 'Deve ter no mínimo 3 caracteres' }),
-  })
+const registerFormSchema = z.object({
+  username: z
+    .string()
+    .min(3, { message: 'Deve ter no mínimo 3 caracteres' })
+    .regex(/^([a-z\\-]+)$/i, {
+      message: 'O usuário só pode ter letras e hífen',
+    })
+    .transform((username) => username.toLowerCase()),
+  name: z.string().min(3, { message: 'Deve ter no mínimo 3 caracteres' }),
+})
+type IFormData = z.infer<typeof registerFormSchema>
 
-  type IFormData = z.infer<typeof registerFormSchema>
+export default function Register({ ...props }: RegisterProps) {
+  const { query } = useRouter()
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    setValue,
+    formState: { errors },
   } = useForm<IFormData>({
     resolver: zodResolver(registerFormSchema),
   })
+
+  useEffect(() => {
+    if (query.username) {
+      setValue('username', query.username as string)
+    }
+  }, [query.username, setValue])
 
   const handleRegister = async (data: IFormData) => {
     alert(data)
