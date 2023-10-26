@@ -33,6 +33,10 @@ export const Form = styled(Box, {
   },
 })
 
+export const FormError = styled(Text, {
+  color: '#f75a68',
+})
+
 export type ContainerProps = ComponentProps<typeof Container>
 export type HeaderProps = ComponentProps<typeof Header>
 export type FormProps = ComponentProps<typeof Form>

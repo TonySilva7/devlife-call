@@ -31,7 +31,7 @@ export default function ClaimUsernameForm({ ...props }: IProps) {
     resolver: zodResolver(claimUsernameSchema),
   })
 
-  const handleClaimUsername = (data: IUsernameForm) => {
+  const handleClaimUsername = async (data: IUsernameForm) => {
     alert(data.username)
   }
 
