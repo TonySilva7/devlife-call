@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { http } from '@app/lib/axios'
+import { AxiosError } from 'axios'
 
 type RegisterProps = ContainerProps
 
@@ -47,7 +48,12 @@ export default function Register({ ...props }: RegisterProps) {
         username: data.username,
       })
     } catch (error) {
-      console.log(error)
+      if (error instanceof AxiosError && error.response?.data?.message) {
+        alert(error.response.data.message)
+        return
+      }
+
+      console.error(error)
     }
   }
   return (
