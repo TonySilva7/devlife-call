@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import { http } from '@app/lib/axios'
 
 type RegisterProps = ContainerProps
 
@@ -40,7 +41,14 @@ export default function Register({ ...props }: RegisterProps) {
   }, [query.username, setValue])
 
   const handleRegister = async (data: IFormData) => {
-    alert(data)
+    try {
+      await http.post('/users', {
+        name: data.name,
+        username: data.username,
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
   return (
     <Container {...props}>
