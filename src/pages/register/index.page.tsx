@@ -24,13 +24,13 @@ const registerFormSchema = z.object({
 type IFormData = z.infer<typeof registerFormSchema>
 
 export default function Register({ ...props }: RegisterProps) {
-  const { query } = useRouter()
+  const { query, push } = useRouter()
 
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<IFormData>({
     resolver: zodResolver(registerFormSchema),
   })
@@ -47,6 +47,8 @@ export default function Register({ ...props }: RegisterProps) {
         name: data.name,
         username: data.username,
       })
+
+      await push('/register/connect-calendar')
     } catch (error) {
       if (error instanceof AxiosError && error.response?.data?.message) {
         alert(error.response.data.message)
@@ -93,7 +95,7 @@ export default function Register({ ...props }: RegisterProps) {
           )}
         </label>
 
-        <Button type="submit">
+        <Button type="submit" disabled={isSubmitting}>
           Próximo passo
           <ArrowRight />
         </Button>
