@@ -1,5 +1,6 @@
 import { prisma } from '@app/lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { setCookie } from 'nookies'
 
 type Data = {
   name: string
@@ -26,6 +27,11 @@ export default async function handler(
       name,
       username,
     },
+  })
+
+  setCookie({ res }, '@devlife:userId', user.id, {
+    maxAge: 60 * 60 * 24 * 7, // 7 dias
+    path: '/',
   })
 
   return res.status(201).json(user)
