@@ -3,13 +3,21 @@ import { ArrowRight } from 'phosphor-react'
 import { Container, ContainerProps, Form, FormError, Header } from '../styles'
 import { register } from 'module'
 import { ConnectBox, ConnectItem } from './styles'
+import { useSession, signIn, signOut } from 'next-auth/react'
 
 type RegisterProps = ContainerProps
 
 export default function Register({ ...props }: RegisterProps) {
   // const handleRegister = async () => {}
+  const { data: session } = useSession()
+
+  const handleSignIn = async () => {
+    await signIn('google')
+  }
+
   return (
     <Container {...props}>
+      <Text>{JSON.stringify(session)}</Text>
       <Header>
         <Heading as="strong">Conecte-se sua agenda!</Heading>
         <Text>
@@ -23,7 +31,7 @@ export default function Register({ ...props }: RegisterProps) {
       <ConnectBox>
         <ConnectItem>
           <Text>Google Calendar</Text>
-          <Button variant="secondary" size="sm">
+          <Button variant="secondary" size="sm" onClick={handleSignIn}>
             Conectar
             <ArrowRight />
           </Button>
