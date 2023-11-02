@@ -29,7 +29,7 @@ export default async function handler(
     },
   })
 
-  setCookie({ res }, '@devlife:userId', user.id, {
+  setCookie({ res }, '@devlifecall:userId', user.id, {
     maxAge: 60 * 60 * 24 * 7, // 7 dias
     path: '/',
   })
