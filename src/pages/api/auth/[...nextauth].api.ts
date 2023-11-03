@@ -1,7 +1,7 @@
 import { PrismaAdapter } from '@app/lib/auth/prisma-adapter'
 import { NextApiRequest, NextApiResponse } from 'next'
 import NextAuth, { NextAuthOptions } from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
+import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google'
 
 export function buildNextAuthOptions(
   req: NextApiRequest,
@@ -22,6 +22,15 @@ export function buildNextAuthOptions(
               'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
           },
         },
+        profile(profile: GoogleProfile) {
+          return {
+            id: profile.sub,
+            name: profile.name,
+            username: '', // como o username será associado ao username do banco de dados, não é necessário passar ele aqui
+            email: profile.email,
+            avatar_url: profile.picture,
+          }
+        },
       }),
       // ...add more providers here
     ],
@@ -35,6 +44,12 @@ export function buildNextAuthOptions(
         }
 
         return true
+      },
+      async session({ session, user }) {
+        return {
+          ...session,
+          user,
+        }
       },
     },
   }

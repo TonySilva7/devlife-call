@@ -10,7 +10,7 @@ type RegisterProps = ContainerProps
 
 export default function Register({ ...props }: RegisterProps) {
   // const handleRegister = async () => {}
-  const { data: session, status } = useSession()
+  const { data, status } = useSession()
   const { query } = useRouter()
 
   const hasAuthError = !!query.error
@@ -19,6 +19,8 @@ export default function Register({ ...props }: RegisterProps) {
   const handleConnectCalendar = async () => {
     await signIn('google')
   }
+
+  console.log(data)
 
   return (
     <Container {...props}>
