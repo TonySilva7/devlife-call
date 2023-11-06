@@ -1,14 +1,13 @@
-import { Button, Heading, MultiStep, Text, TextInput } from '@ignite-ui/react'
-import { ArrowRight, Check } from 'phosphor-react'
-import { Container, ContainerProps, Form, FormError, Header } from '../styles'
-import { register } from 'module'
-import { AuthError, ConnectBox, ConnectItem } from './styles'
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { Button, Heading, MultiStep, Text } from '@ignite-ui/react'
+import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import { ArrowRight, Check } from 'phosphor-react'
+import { Container, ContainerProps, Header } from '../styles'
+import { AuthError, ConnectBox, ConnectItem } from './styles'
 
 type RegisterProps = ContainerProps
 
-export default function Register({ ...props }: RegisterProps) {
+export default function ConnectCalendar({ ...props }: RegisterProps) {
   // const handleRegister = async () => {}
   const { data, status } = useSession()
   const { query } = useRouter()
