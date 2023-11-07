@@ -22,6 +22,7 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { getWeekDays } from '@app/utils/week-daty'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { convertTimeStringToMinutes } from '@app/utils/convert-time-string-to-minutes'
+import { http } from '@app/lib/axios'
 
 type TimeIntervalsProps = ComponentProps<typeof Container>
 
@@ -91,8 +92,10 @@ export default function TimeIntervals({ ...props }: TimeIntervalsProps) {
   })
 
   async function handleSetTimeIntervals(data: unknown) {
-    const formData = data as IFormDataOutput
-    console.log('Submit: ', formData)
+    const { intervals } = data as IFormDataOutput
+    console.log('Submit: ', intervals)
+
+    await http.post('/users/time-intervals', { intervals })
   }
 
   const intervals = watch('intervals')
