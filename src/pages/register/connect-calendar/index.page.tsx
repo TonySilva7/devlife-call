@@ -10,13 +10,17 @@ type RegisterProps = ContainerProps
 export default function ConnectCalendar({ ...props }: RegisterProps) {
   // const handleRegister = async () => {}
   const { data, status } = useSession()
-  const { query } = useRouter()
+  const { query, push } = useRouter()
 
   const hasAuthError = !!query.error
   const isSignedIn = status === 'authenticated'
 
   const handleConnectCalendar = async () => {
     await signIn('google')
+  }
+
+  const handleNavigateToNextStep = async () => {
+    await push('/register/time-intervals')
   }
 
   console.log(data)
@@ -60,7 +64,11 @@ export default function ConnectCalendar({ ...props }: RegisterProps) {
           </AuthError>
         )}
 
-        <Button type="submit" disabled={!isSignedIn}>
+        <Button
+          type="submit"
+          disabled={!isSignedIn}
+          onClick={handleNavigateToNextStep}
+        >
           Próximo passo
           <ArrowRight />
         </Button>
