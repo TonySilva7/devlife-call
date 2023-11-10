@@ -11,10 +11,10 @@ import {
 type CalendarStepProps = ComponentProps<typeof Container>
 
 function CalendarStep({ ...props }: CalendarStepProps) {
-  const [isDateSelected] = useState(true)
+  const [isDateSelected] = useState(false)
 
   return (
-    <Container isTimePickerOpen={true} {...props}>
+    <Container {...props}>
       <Calendar />
 
       {isDateSelected && (
