@@ -1,10 +1,8 @@
-import { ComponentProps } from 'react'
 import { CalendarStep } from './CalendarStep'
+import { ConfirmStep } from './ConfirmStep'
 
-type ScheduleFormProps = ComponentProps<typeof CalendarStep>
+export default function ScheduleForm() {
+  const isConfirmStep = true
 
-export default function ScheduleForm({ ...props }: ScheduleFormProps) {
-  return <CalendarStep {...props} />
+  return isConfirmStep ? <ConfirmStep /> : <CalendarStep />
 }
-
-export { type ScheduleFormProps }
