@@ -1,7 +1,6 @@
-import { ComponentProps } from 'react'
-import { ConfirmForm, FormActions, FormHeader } from './styles'
 import { Button, Text, TextArea, TextInput } from '@ignite-ui/react'
 import { CalendarBlank, Clock } from 'phosphor-react'
+import { ConfirmForm, FormActions, FormHeader } from './styles'
 
 function ConfirmStep() {
   function handleConfirmScheduling() {
