@@ -11,7 +11,10 @@ import {
 import { getWeekDays } from '@app/utils/get-week-day'
 import dayjs from 'dayjs'
 
-type CalendarProps = ComponentProps<typeof CalendarContainer>
+type CalendarProps = ComponentProps<typeof CalendarContainer> & {
+  selectedDate: Date | null
+  onDateSelect: (date: Date) => void
+}
 
 interface CalendarWeek {
   week: number
@@ -23,7 +26,7 @@ interface CalendarWeek {
 
 type CalendarWeeks = Array<CalendarWeek>
 
-function Calendar({ ...props }: CalendarProps) {
+function Calendar({ selectedDate, onDateSelect, ...props }: CalendarProps) {
   const shortWeekDays = getWeekDays({ short: true })
   const [currentDate, setCurrentDate] = useState(() => dayjs().set('date', 1))
 
@@ -132,7 +135,10 @@ function Calendar({ ...props }: CalendarProps) {
             <tr key={week}>
               {days.map(({ date, disabled }) => (
                 <td key={date.format('DD')}>
-                  <CalendarDay disabled={disabled}>
+                  <CalendarDay
+                    onClick={() => onDateSelect(date.toDate())}
+                    disabled={disabled}
+                  >
                     {date.format('DD')}
                   </CalendarDay>
                 </td>
