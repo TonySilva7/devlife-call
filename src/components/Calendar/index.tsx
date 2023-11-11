@@ -1,5 +1,5 @@
 import { CaretLeft, CaretRight } from 'phosphor-react'
-import { ComponentProps, useState } from 'react'
+import { ComponentProps, useMemo, useState } from 'react'
 import {
   CalendarActions,
   CalendarBody,
@@ -29,6 +29,31 @@ function Calendar({ ...props }: CalendarProps) {
 
   const currentMonth = currentDate.format('MMMM')
   const currentYear = currentDate.format('YYYY')
+
+  const calendarWeeks = useMemo(() => {
+    const daysInMonthArray = Array.from({
+      length: currentDate.daysInMonth(),
+    }).map((_, index) => currentDate.set('date', index + 1))
+
+    const firstWeekDay = currentDate.get('day')
+
+    const previousMonthFillArray = Array.from({
+      length: firstWeekDay,
+    })
+      .map((_, index) => {
+        const day = currentDate.subtract(index + 1, 'day')
+        return day
+      })
+      .reverse()
+
+    return [
+      ...previousMonthFillArray,
+      ...daysInMonthArray,
+      // ...Array.from({ length: 42 - daysInMonthArray.length - firstWeekDay }),
+    ]
+  }, [currentDate])
+
+  console.log(calendarWeeks)
 
   return (
     <CalendarContainer {...props}>
