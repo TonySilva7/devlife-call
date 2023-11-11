@@ -71,7 +71,10 @@ function Calendar({ ...props }: CalendarProps) {
 
     const calendarDays = [
       ...previousMonthFillArray.map((date) => ({ date, disabled: true })),
-      ...daysInMonthArray.map((date) => ({ date, disabled: false })),
+      ...daysInMonthArray.map((date) => ({
+        date,
+        disabled: date.endOf('day').isBefore(new Date()),
+      })),
       ...nextMonthFillArray.map((date) => ({ date, disabled: true })),
     ]
 
