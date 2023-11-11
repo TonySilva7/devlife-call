@@ -35,7 +35,7 @@ function Calendar({ ...props }: CalendarProps) {
       length: currentDate.daysInMonth(),
     }).map((_, index) => currentDate.set('date', index + 1))
 
-    const firstWeekDay = currentDate.get('day')
+    const firstWeekDay = currentDate.get('day') // pega o dia textual (não em número)
 
     const previousMonthFillArray = Array.from({
       length: firstWeekDay,
