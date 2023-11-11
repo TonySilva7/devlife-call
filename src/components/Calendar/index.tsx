@@ -13,6 +13,16 @@ import dayjs from 'dayjs'
 
 type CalendarProps = ComponentProps<typeof CalendarContainer>
 
+interface CalendarWeek {
+  week: number
+  days: Array<{
+    date: dayjs.Dayjs
+    disabled: boolean
+  }>
+}
+
+type CalendarWeeks = Array<CalendarWeek>
+
 function Calendar({ ...props }: CalendarProps) {
   const shortWeekDays = getWeekDays({ short: true })
   const [currentDate, setCurrentDate] = useState(() => dayjs().set('date', 1))
@@ -30,7 +40,7 @@ function Calendar({ ...props }: CalendarProps) {
   const currentMonth = currentDate.format('MMMM')
   const currentYear = currentDate.format('YYYY')
 
-  const calendarWeeks = useMemo(() => {
+  const createCalendarWeeks = useMemo(() => {
     const daysInMonthArray = Array.from({
       length: currentDate.daysInMonth(),
     }).map((_, index) => currentDate.set('date', index + 1))
@@ -46,14 +56,43 @@ function Calendar({ ...props }: CalendarProps) {
       })
       .reverse()
 
-    return [
-      ...previousMonthFillArray,
-      ...daysInMonthArray,
-      // ...Array.from({ length: 42 - daysInMonthArray.length - firstWeekDay }),
-    ]
-  }, [currentDate])
+    const lastDayInCurrentMonth = currentDate.set(
+      'date',
+      currentDate.daysInMonth(),
+    )
+    const lastWeekDay = lastDayInCurrentMonth.get('day')
 
-  console.log(calendarWeeks)
+    const nextMonthFillArray = Array.from({
+      length: 7 - (lastWeekDay + 1),
+    }).map((_, index) => {
+      const day = lastDayInCurrentMonth.add(index + 1, 'day')
+      return day
+    })
+
+    const calendarDays = [
+      ...previousMonthFillArray.map((date) => ({ date, disabled: true })),
+      ...daysInMonthArray.map((date) => ({ date, disabled: false })),
+      ...nextMonthFillArray.map((date) => ({ date, disabled: true })),
+    ]
+
+    const calendarWeeks = calendarDays.reduce<CalendarWeeks>(
+      (calWeeks, calendarDay, index, original) => {
+        const isNewWeek = index % 7 === 0
+
+        if (isNewWeek) {
+          calWeeks.push({
+            week: index / 7 + 1,
+            days: original.slice(index, index + 7),
+          })
+        }
+
+        return calWeeks
+      },
+      [],
+    )
+
+    return calendarWeeks
+  }, [currentDate])
 
   return (
     <CalendarContainer {...props}>
@@ -86,44 +125,17 @@ function Calendar({ ...props }: CalendarProps) {
         </thead>
 
         <tbody>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-              <CalendarDay>1</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay disabled>2</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay>3</CalendarDay>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <CalendarDay>1</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay>1</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay>1</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay>1</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay>1</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay disabled>2</CalendarDay>
-            </td>
-            <td>
-              <CalendarDay>3</CalendarDay>
-            </td>
-          </tr>
+          {createCalendarWeeks.map(({ week, days }) => (
+            <tr key={week}>
+              {days.map(({ date, disabled }) => (
+                <td key={date.format('DD')}>
+                  <CalendarDay disabled={disabled}>
+                    {date.format('DD')}
+                  </CalendarDay>
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </CalendarBody>
     </CalendarContainer>
