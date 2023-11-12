@@ -1,16 +1,16 @@
-import { ComponentProps, useEffect, useState } from 'react'
 import { Calendar } from '@app/components/Calendar'
-import {
-  TimePicker,
-  Container,
-  TimePickerHeader,
-  TimePickerList,
-  TimePickerItem,
-} from './styles'
-import dayjs from 'dayjs'
 import { http } from '@app/lib/axios'
-import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
+import dayjs from 'dayjs'
+import { useRouter } from 'next/router'
+import { ComponentProps, useState } from 'react'
+import {
+  Container,
+  TimePicker,
+  TimePickerHeader,
+  TimePickerItem,
+  TimePickerList,
+} from './styles'
 
 type CalendarStepProps = ComponentProps<typeof Container>
 
