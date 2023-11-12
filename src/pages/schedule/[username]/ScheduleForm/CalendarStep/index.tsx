@@ -13,9 +13,14 @@ import { useRouter } from 'next/router'
 
 type CalendarStepProps = ComponentProps<typeof Container>
 
+interface Availability {
+  possibleTimes: number[]
+  availableTimes: number[]
+}
+
 function CalendarStep({ ...props }: CalendarStepProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [availability, setAvailability] = useState<Date[]>([])
+  const [availability, setAvailability] = useState<Availability | null>(null)
   const isDateSelected = !!selectedDate
 
   const router = useRouter()
@@ -32,13 +37,12 @@ function CalendarStep({ ...props }: CalendarStepProps) {
     http
       .get(`users/${username}/availability`, {
         params: {
-          date: selectedDate.getUTCDate(),
+          date: dayjs(selectedDate).format('YYYY-MM-DD'),
         },
       })
-      .then((response) => {
-        setAvailability(response.data)
-      })
-  }, [selectedDate])
+      .then(({ data }) => setAvailability(data))
+      .catch(() => setAvailability(null))
+  }, [selectedDate, username])
 
   return (
     <Container isTimePickerOpen={isDateSelected} {...props}>
@@ -51,38 +55,14 @@ function CalendarStep({ ...props }: CalendarStepProps) {
           </TimePickerHeader>
 
           <TimePickerList>
-            {availability.map((date) => (
-              <TimePickerItem key={date.toISOString()}>
-                {dayjs(date).format('HH:mm')}
+            {availability?.possibleTimes.map((hour) => (
+              <TimePickerItem
+                key={hour}
+                disabled={!availability.availableTimes.includes(hour)}
+              >
+                {String(hour).padStart(2, '0')}:00h
               </TimePickerItem>
             ))}
-          </TimePickerList>
-        </TimePicker>
-      )}
-    </Container>
-  )
-
-  return (
-    <Container isTimePickerOpen={isDateSelected} {...props}>
-      <Calendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
-
-      {isDateSelected && (
-        <TimePicker>
-          <TimePickerHeader>
-            {weekDay} <span>{describedDate}</span>
-          </TimePickerHeader>
-
-          <TimePickerList>
-            <TimePickerItem>08:00</TimePickerItem>
-            <TimePickerItem>08:00</TimePickerItem>
-            <TimePickerItem>08:00</TimePickerItem>
-            <TimePickerItem>08:00</TimePickerItem>
-            <TimePickerItem>08:00</TimePickerItem>
-            <TimePickerItem>08:00</TimePickerItem>
-            <TimePickerItem>08:00</TimePickerItem>
-            <TimePickerItem>08:00</TimePickerItem>
-            <TimePickerItem>08:00</TimePickerItem>
-            <TimePickerItem>08:00</TimePickerItem>
           </TimePickerList>
         </TimePicker>
       )}
