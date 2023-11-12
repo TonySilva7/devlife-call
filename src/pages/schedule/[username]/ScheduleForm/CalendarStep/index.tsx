@@ -51,19 +51,6 @@ function CalendarStep({ ...props }: CalendarStepProps) {
     enabled: !!selectedDate,
   })
 
-  // useEffect(() => {
-  //   if (!selectedDate) return
-
-  //   http
-  //     .get(`users/${username}/availability`, {
-  //       params: {
-  //         date: dayjs(selectedDate).format('YYYY-MM-DD'),
-  //       },
-  //     })
-  //     .then(({ data }) => setAvailability(data))
-  //     .catch(() => setAvailability(null))
-  // }, [selectedDate, username])
-
   return (
     <Container isTimePickerOpen={isDateSelected} {...props}>
       <Calendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
