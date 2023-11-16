@@ -12,14 +12,16 @@ import {
   TimePickerList,
 } from './styles'
 
-type CalendarStepProps = ComponentProps<typeof Container>
+type CalendarStepProps = ComponentProps<typeof Container> & {
+  onSelectedDate: (date: Date) => void
+}
 
 interface Availability {
   possibleTimes: number[]
   availableTimes: number[]
 }
 
-function CalendarStep({ ...props }: CalendarStepProps) {
+function CalendarStep({ onSelectedDate, ...props }: CalendarStepProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   // const [availability, setAvailability] = useState<Availability | null>(null)
   const isDateSelected = !!selectedDate
@@ -51,6 +53,15 @@ function CalendarStep({ ...props }: CalendarStepProps) {
     enabled: !!selectedDate,
   })
 
+  const handleSelectTime = (hour: number) => {
+    const dateWithTime = dayjs(selectedDate)
+      .set('hour', hour)
+      .startOf('hour')
+      .toDate()
+
+    onSelectedDate(dateWithTime)
+  }
+
   return (
     <Container isTimePickerOpen={isDateSelected} {...props}>
       <Calendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
@@ -66,6 +77,7 @@ function CalendarStep({ ...props }: CalendarStepProps) {
               <TimePickerItem
                 key={hour}
                 disabled={!availability.availableTimes.includes(hour)}
+                onClick={() => handleSelectTime(hour)}
               >
                 {String(hour).padStart(2, '0')}:00h
               </TimePickerItem>
