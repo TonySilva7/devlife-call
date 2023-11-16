@@ -16,7 +16,6 @@ import { useQuery } from '@tanstack/react-query'
 
 type CalendarProps = ComponentProps<typeof CalendarContainer> & {
   selectedDate: Date | null
-  // blockedDates: Date[]
   onDateSelect: (date: Date) => void
 }
 
@@ -32,6 +31,7 @@ type CalendarWeeks = Array<CalendarWeek>
 
 interface BlockedDates {
   blockedWeekDays: number[]
+  blockedDates: number[]
 }
 
 function Calendar({ selectedDate, onDateSelect, ...props }: CalendarProps) {
@@ -61,7 +61,7 @@ function Calendar({ selectedDate, onDateSelect, ...props }: CalendarProps) {
     const response = await http.get(`users/${username}/blocked-dates`, {
       params: {
         year: yearParam,
-        month: monthParam,
+        month: monthParam + 1,
       },
     })
     return response.data
@@ -109,7 +109,8 @@ function Calendar({ selectedDate, onDateSelect, ...props }: CalendarProps) {
         date,
         disabled:
           date.endOf('day').isBefore(new Date()) ||
-          blockedDates?.blockedWeekDays.includes(date.get('day')),
+          blockedDates?.blockedWeekDays.includes(date.get('day')) ||
+          blockedDates.blockedDates.includes(date.get('date')),
       })),
       ...nextMonthFillArray.map((date) => ({ date, disabled: true })),
     ]
