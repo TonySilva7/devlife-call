@@ -50,6 +50,7 @@ function CalendarStep({ onSelectedDate, ...props }: CalendarStepProps) {
   const { data: availability } = useQuery<Availability>({
     queryKey: ['availability', selectedDateWithoutTime],
     queryFn: getAvailability,
+    staleTime: 3_000,
     enabled: !!selectedDate,
   })
 
