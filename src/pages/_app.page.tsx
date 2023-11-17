@@ -1,4 +1,5 @@
 import { globalStyles } from '@app/styles/global'
+import { DefaultSeo } from 'next-seo'
 import '../lib/dayjs'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
@@ -14,6 +15,19 @@ export default function App({
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider session={session}>
+        <DefaultSeo
+          openGraph={{
+            type: 'website',
+            locale: 'pt_BR',
+            url: 'https://www.devlif-call.com',
+            siteName: 'DevLife Call',
+          }}
+          twitter={{
+            handle: '@handle',
+            site: '@site',
+            cardType: 'summary_large_image',
+          }}
+        />
         <Component {...pageProps} />
       </SessionProvider>
     </QueryClientProvider>

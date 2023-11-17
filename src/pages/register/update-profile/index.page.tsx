@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { buildNextAuthOptions } from '@app/pages/api/auth/[...nextauth].api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -46,39 +47,43 @@ export default function UpdateProfile({ ...props }: RegisterProps) {
     await router.push(`/schedule/${session.data?.user.username}`)
   }
   return (
-    <Container {...props}>
-      <Header>
-        <Heading as="strong">Bem-vindo ao Devlife Call</Heading>
-        <Text>
-          Precisamos de algumas informações para criar seu perfil! Ah, você pode
-          editar essas informações depois.
-        </Text>
+    <>
+      <NextSeo title="Atualize seu perfil | DevLife Call" noindex />
 
-        <MultiStep size={4} currentStep={4} />
-      </Header>
+      <Container {...props}>
+        <Header>
+          <Heading as="strong">Bem-vindo ao Devlife Call</Heading>
+          <Text>
+            Precisamos de algumas informações para criar seu perfil! Ah, você
+            pode editar essas informações depois.
+          </Text>
 
-      <ProfileBox as="form" onSubmit={handleSubmit(handleUpdateProfile)}>
-        <label>
-          <Text size="sm">Foto de perfil</Text>
-          <Avatar
-            src={session.data?.user.avatar_url}
-            alt={session.data?.user.name}
-          />
-        </label>
-        <label>
-          <Text size="sm">Sobre você</Text>
-          <TextArea {...register('bio')} />
-          <FormAnnotation size="sm">
-            Fale um pouco sobre você. Isto será exibido em sua página pessoal.
-          </FormAnnotation>
-        </label>
+          <MultiStep size={4} currentStep={4} />
+        </Header>
 
-        <Button type="submit" disabled={isSubmitting}>
-          Finalizar
-          <ArrowRight />
-        </Button>
-      </ProfileBox>
-    </Container>
+        <ProfileBox as="form" onSubmit={handleSubmit(handleUpdateProfile)}>
+          <label>
+            <Text size="sm">Foto de perfil</Text>
+            <Avatar
+              src={session.data?.user.avatar_url}
+              alt={session.data?.user.name}
+            />
+          </label>
+          <label>
+            <Text size="sm">Sobre você</Text>
+            <TextArea {...register('bio')} />
+            <FormAnnotation size="sm">
+              Fale um pouco sobre você. Isto será exibido em sua página pessoal.
+            </FormAnnotation>
+          </label>
+
+          <Button type="submit" disabled={isSubmitting}>
+            Finalizar
+            <ArrowRight />
+          </Button>
+        </ProfileBox>
+      </Container>
+    </>
   )
 }
 
