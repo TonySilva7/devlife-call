@@ -34,7 +34,7 @@ interface BlockedDates {
   blockedDates: number[]
 }
 
-function Calendar({ selectedDate, onDateSelect, ...props }: CalendarProps) {
+function Calendar({ onDateSelect, ...props }: CalendarProps) {
   const shortWeekDays = getWeekDays({ short: true })
   const [currentDate, setCurrentDate] = useState(() => dayjs().set('date', 1))
   const router = useRouter()
